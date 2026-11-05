@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --bg: #f5f6fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f8;
+  --surface-3: #e7ebf5;
+  --border: #e2e6f0;
+  --text: #101528;
+  --muted: #64708a;
+  --accent: #6d5ef5;
+  --bg-rgb: 245 246 251;
+  --surface-rgb: 255 255 255;
+  --surface-2-rgb: 238 241 248;
+  --surface-3-rgb: 231 235 245;
+  --border-rgb: 226 230 240;
+  --text-rgb: 16 21 40;
+  --muted-rgb: 100 112 138;
+  --accent-rgb: 109 94 245;
+  --accent-strong: #5546e8;
+  --accent-soft: rgba(109, 94, 245, 0.12);
+  --glow-1: rgba(109, 94, 245, 0.16);
+  --glow-2: rgba(20, 184, 166, 0.12);
+  --grid: rgba(16, 21, 40, 0.035);
+  --shadow: 0 24px 60px -30px rgba(28, 34, 64, 0.35);
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #070a13;
+  --surface: #0d1220;
+  --surface-2: #121a2b;
+  --surface-3: #18223a;
+  --border: #1e2942;
+  --text: #eef2ff;
+  --muted: #8d99b7;
+  --accent: #8b7cff;
+  --bg-rgb: 7 10 19;
+  --surface-rgb: 13 18 32;
+  --surface-2-rgb: 18 26 43;
+  --surface-3-rgb: 24 34 58;
+  --border-rgb: 30 41 66;
+  --text-rgb: 238 242 255;
+  --muted-rgb: 141 153 183;
+  --accent-rgb: 139 124 255;
+  --accent-strong: #6d5ef5;
+  --accent-soft: rgba(139, 124, 255, 0.14);
+  --glow-1: rgba(109, 94, 245, 0.22);
+  --glow-2: rgba(20, 184, 166, 0.1);
+  --grid: rgba(255, 255, 255, 0.035);
+  --shadow: 0 30px 70px -35px rgba(0, 0, 0, 0.8);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(900px 500px at 12% -8%, var(--glow-1), transparent 60%),
+    radial-gradient(800px 500px at 100% 0%, var(--glow-2), transparent 55%),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: auto, auto, 48px 48px, 48px 48px;
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-app-surface shadow-card;
+  }
+  .card-hover {
+    @apply transition duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-glow;
+  }
+  .glass {
+    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    backdrop-filter: blur(18px);
+  }
+  .label-xs {
+    @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-muted;
+  }
+  .display {
+    @apply font-display tracking-[-0.03em];
+  }
+  .text-gradient {
+    background: linear-gradient(100deg, var(--text) 10%, var(--accent) 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .divider {
+    @apply h-px w-full bg-line;
+  }
+  .focus-ring {
+    @apply outline-none ring-offset-2 ring-offset-app focus-visible:ring-2 focus-visible:ring-brand/70;
+  }
+  .skeleton {
+    @apply rounded-xl bg-app-soft;
+    background-image: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+    background-size: 700px 100%;
+    background-repeat: no-repeat;
+    animation: shimmer 1.6s linear infinite;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+.reader-page {
+  background: var(--reader-bg, #f7f4ee);
+  color: var(--reader-text, #1f2430);
+}
+
+.reader-page .react-pdf__Page canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.55);
+  cursor: pointer;
+}
+
+@keyframes shimmer {
+  0% { background-position: -700px 0; }
+  100% { background-position: 700px 0; }
+}

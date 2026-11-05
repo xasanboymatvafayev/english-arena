@@ -1,0 +1,2 @@
+# Root fallback: Render "Root Directory" bo'sh qolsa ham backend bog'liqliklarini o'rnatish uchun.
+-r backend/requirements.txt

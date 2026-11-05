@@ -1,0 +1,58 @@
+# Render Blueprint — English Arena backend
+# GitHub repo ildizida turadi. Render "New → Blueprint" orqali avtomatik o'qiydi.
+#
+# Eslatma: free plan uchun disk yo'q — yuklangan fayllar deploy/restartda o'chadi.
+# Production uchun pullik instans + disk uchun quyidagi "disk" blokini oching
+# va UPLOAD_DIR ni /var/data/uploads ga o'zgartiring.
+
+services:
+  - type: web
+    name: english-arena-api
+    runtime: python
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: sh start.sh
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: ENVIRONMENT
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 1440
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: 30
+      - key: INVITATION_EXPIRE_DAYS
+        value: 7
+      - key: UPLOAD_DIR
+        value: /tmp/uploads
+      - key: MAX_IMAGE_MB
+        value: 4
+      - key: MAX_BOOK_MB
+        value: 40
+      - key: MAX_ASSIGNMENT_MB
+        value: 15
+      - key: EMAILJS_SERVICE_ID
+        sync: false
+      - key: EMAILJS_TEMPLATE_ID
+        sync: false
+      - key: EMAILJS_PUBLIC_KEY
+        sync: false
+      - key: EMAILJS_PRIVATE_KEY
+        sync: false
+    # Pullik rejada doimiy fayllar uchun:
+    # disk:
+    #   name: english-arena-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
