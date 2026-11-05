@@ -14,7 +14,8 @@ import httpx
 DICTIONARY_API = "https://freedictionaryapi.com/api/v1/entries/en/{word}"
 AUDIO_API = "https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
 TRANSLATE_API = "https://api.mymemory.translated.net/get"
-CACHE_VERSION = 2
+GOOGLE_TRANSLATE_API = "https://translate.googleapis.com/translate_a/single"
+CACHE_VERSION = 3
 
 
 class WordNotFound(Exception):
@@ -25,9 +26,34 @@ class DictionaryUnavailable(Exception):
     pass
 
 
-def _translate(text: str, timeout: float = 10) -> tuple[str | None, list[str]]:
+def _google_translate(text: str, timeout: float = 8) -> str | None:
+    """Free fallback used when MyMemory is unavailable from the host."""
+    try:
+        response = httpx.get(
+            GOOGLE_TRANSLATE_API,
+            params={"client": "gtx", "sl": "en", "tl": "uz", "dt": "t", "q": text},
+            timeout=timeout,
+            headers={"User-Agent": "Mozilla/5.0 (compatible; EnglishArena/1.0)"},
+        )
+        response.raise_for_status()
+        data = response.json()
+    except (httpx.HTTPError, ValueError):
+        return None
+    try:
+        chunks = [part[0] for part in data[0] if part and part[0]]
+    except (TypeError, IndexError, KeyError):
+        return None
+    translated = html.unescape("".join(chunks).strip())
+    if not translated or translated.lower() == text.lower():
+        return None
+    return translated
+
+
+def _translate(text: str, timeout: float = 10) -> tuple[str | None, list[str], str | None]:
     if not text:
-        return None, []
+        return None, [], None
+
+    # 1) MyMemory — official free translation API.
     try:
         response = httpx.get(
             TRANSLATE_API,
@@ -37,29 +63,35 @@ def _translate(text: str, timeout: float = 10) -> tuple[str | None, list[str]]:
         )
         response.raise_for_status()
         data = response.json()
+        if data.get("responseStatus") == 200:
+            payload = data.get("responseData") or {}
+            translated = html.unescape((payload.get("translatedText") or "").strip())
+            if (
+                translated
+                and translated.lower() != text.lower()
+                and "MYMEMORY WARNING" not in translated.upper()
+                and "QUERY LENGTH LIMIT" not in translated.upper()
+            ):
+                alternatives: list[str] = []
+                for match in (data.get("matches") or [])[:6]:
+                    candidate = html.unescape((match.get("translation") or "").strip())
+                    if (
+                        candidate
+                        and candidate.lower() != translated.lower()
+                        and candidate not in alternatives
+                        and "MYMEMORY" not in candidate.upper()
+                    ):
+                        alternatives.append(candidate)
+                return translated, alternatives[:4], "MyMemory"
     except (httpx.HTTPError, ValueError):
-        return None, []
+        pass
 
-    if data.get("responseStatus") != 200:
-        return None, []
-    payload = data.get("responseData") or {}
-    translated = html.unescape((payload.get("translatedText") or "").strip())
-    if not translated or translated.lower() == text.lower():
-        return None, []
-    if "MYMEMORY WARNING" in translated.upper() or "QUERY LENGTH LIMIT" in translated.upper():
-        return None, []
-
-    alternatives: list[str] = []
-    for match in (data.get("matches") or [])[:6]:
-        candidate = html.unescape((match.get("translation") or "").strip())
-        if (
-            candidate
-            and candidate.lower() != translated.lower()
-            and candidate not in alternatives
-            and "MYMEMORY" not in candidate.upper()
-        ):
-            alternatives.append(candidate)
-    return translated, alternatives[:4]
+    # 2) Google Translate public endpoint — fallback for hosts where MyMemory
+    # is rate-limited or blocked (e.g. some cloud IP ranges).
+    fallback = _google_translate(text)
+    if fallback:
+        return fallback, [], "Google Translate (fallback)"
+    return None, [], None
 
 
 def _audio_url(word: str) -> str | None:
@@ -139,10 +171,10 @@ def fetch_word(word: str) -> dict[str, Any]:
             if candidate not in synonyms:
                 synonyms.append(candidate)
 
-    translation, alternatives = _translate(word)
+    translation, alternatives, translation_source = _translate(word)
     example_translation = None
     if example:
-        example_translation, _ = _translate(example)
+        example_translation, _, _ = _translate(example)
 
     warnings: list[str] = []
     if translation is None:
@@ -162,6 +194,7 @@ def fetch_word(word: str) -> dict[str, Any]:
         "example": example,
         "example_translation": example_translation,
         "synonyms": synonyms[:8],
-        "source": "freedictionaryapi.com (Wiktionary, CC BY-SA 4.0) + MyMemory",
+        "source": "freedictionaryapi.com (Wiktionary, CC BY-SA 4.0) + "
+        + (translation_source or "tarjima xizmati"),
         "warnings": warnings,
     }
