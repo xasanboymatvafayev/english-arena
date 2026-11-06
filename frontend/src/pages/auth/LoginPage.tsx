@@ -88,7 +88,7 @@ export default function LoginPage() {
               <GraduationCap size={16} className="text-brand" /> Ustoz paneli
             </div>
             <p className="mt-2 text-[11px] leading-relaxed text-muted">
-              Guruhlar, takliflar, vazifalar va coin boshqaruvi.
+              Guruhlar, coinlar, kutubxona va umumiy reyting.
             </p>
           </div>
           <div className="rounded-2xl border border-line bg-app-surface/80 p-4 shadow-card">

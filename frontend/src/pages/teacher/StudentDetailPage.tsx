@@ -21,7 +21,7 @@ import { Card } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
-import { Field, Input, Textarea } from "@/components/ui/Field";
+import { Field, Input } from "@/components/ui/Field";
 import { Tabs } from "@/components/ui/Tabs";
 import { LoadingBlock, ErrorState, EmptyState } from "@/components/ui/States";
 import { ActivityIcon, CoinAmount, CoinBalance, RankBadge } from "@/components/common";
@@ -37,7 +37,6 @@ export default function StudentDetailPage() {
   const [coinOpen, setCoinOpen] = useState(false);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [amount, setAmount] = useState("10");
-  const [reason, setReason] = useState("");
 
   const { data, isLoading, isError, refetch } = useQuery<StudentDetail>({
     queryKey: ["student-detail", studentId],
@@ -50,7 +49,7 @@ export default function StudentDetailPage() {
       api.post<{ balance: number }>("/teacher/coins", {
         student_id: studentId,
         amount: direction * Math.abs(Number(amount) || 0),
-        reason: reason.trim(),
+        reason: direction > 0 ? "Ustoz coin berdi" : "Ustoz coin ayirdi",
       }),
     onSuccess: (result: { balance: number }) => {
       toast.success("Coin amali bajarildi", `Yangi balans: ${result.balance} coin`);
@@ -58,7 +57,6 @@ export default function StudentDetailPage() {
       queryClient.invalidateQueries({ queryKey: ["teacher-dashboard"] });
       queryClient.invalidateQueries({ queryKey: ["teacher-students"] });
       setCoinOpen(false);
-      setReason("");
       setAmount("10");
       setDirection(1);
     },
@@ -101,20 +99,18 @@ export default function StudentDetailPage() {
           <Button onClick={() => setCoinOpen(true)}><Coins size={16} /> Coin berish / ayirish</Button>
         </div>
 
-        <div className="relative mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="relative mt-6 grid gap-3 sm:grid-cols-2">
           <div className="rounded-2xl border border-line bg-app-soft/60 p-4">
             <p className="label-xs">Coin balansi</p>
             <div className="mt-2"><CoinBalance amount={student.coin_balance} className="text-2xl" /></div>
           </div>
-          {(["week", "month", "all"] as const).map((period) => (
-            <div key={period} className="rounded-2xl border border-line bg-app-soft/60 p-4">
-              <p className="label-xs">{period === "week" ? "Haftalik" : period === "month" ? "Oylik" : "Umumiy"} reyting</p>
-              <div className="mt-2 flex items-center gap-2">
-                <p className="display text-2xl font-extrabold">#{data.ranks[period]?.rank || "—"}</p>
-                <span className="text-[10px] text-muted">{data.ranks[period]?.coins || 0} coin</span>
-              </div>
+          <div className="rounded-2xl border border-line bg-app-soft/60 p-4">
+            <p className="label-xs">Umumiy reyting</p>
+            <div className="mt-2 flex items-center gap-2">
+              <p className="display text-2xl font-extrabold">#{data.ranks.all?.rank || "—"}</p>
+              <span className="text-[10px] text-muted">{data.ranks.all?.coins || 0} coin</span>
             </div>
-          ))}
+          </div>
         </div>
       </Card>
 
@@ -203,8 +199,8 @@ export default function StudentDetailPage() {
                 <span className="text-sm font-bold">{data.saved_words_count}</span>
               </div>
               <div className="flex items-center justify-between rounded-xl bg-app-soft p-3">
-                <span className="text-[11px] text-muted">Haftalik reyting</span>
-                <RankBadge rank={data.ranks.week?.rank} />
+                <span className="text-[11px] text-muted">Umumiy reyting</span>
+                <RankBadge rank={data.ranks.all?.rank} />
               </div>
               <div className="flex items-center justify-between rounded-xl bg-app-soft p-3">
                 <span className="text-[11px] text-muted">Faol kunlar</span>
@@ -237,7 +233,7 @@ export default function StudentDetailPage() {
         footer={
           <>
             <Button variant="ghost" onClick={() => setCoinOpen(false)}>Bekor qilish</Button>
-            <Button onClick={() => adjust.mutate()} loading={adjust.isPending} disabled={!reason.trim() || !Number(amount)}>
+            <Button onClick={() => adjust.mutate()} loading={adjust.isPending} disabled={!Number(amount)}>
               {direction === 1 ? "Coin berish" : "Coin ayirish"}
             </Button>
           </>
@@ -270,9 +266,6 @@ export default function StudentDetailPage() {
               </button>
             ))}
           </div>
-          <Field label="Sabab" required hint="Sabab coin tarixida va o'quvchi panelida ko'rinadi.">
-            <Textarea value={reason} onChange={(event) => setReason(event.target.value)} placeholder="Masalan: Uy vazifasini a'lo bajardi" maxLength={300} />
-          </Field>
         </div>
       </Modal>
     </div>

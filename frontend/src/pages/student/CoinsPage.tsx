@@ -64,7 +64,7 @@ export default function StudentCoinsPage() {
 
       <div className="mb-4 flex items-center justify-between">
         <Tabs value={tab} onChange={setTab} items={[{ value: "all", label: "Barchasi", count: transactions.length }, { value: "earned", label: "Olingan" }, { value: "spent", label: "Sarflangan" }]} />
-        <Badge variant="neutral"><TrendingUp size={11} /> Haftalik reytingda hisoblanadi</Badge>
+        <Badge variant="neutral"><TrendingUp size={11} /> Umumiy reytingda hisoblanadi</Badge>
       </div>
 
       <Card className="overflow-hidden">

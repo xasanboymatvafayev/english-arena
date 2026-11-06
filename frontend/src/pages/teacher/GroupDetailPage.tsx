@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  ClipboardList,
   Copy,
   Mail,
   Plus,
@@ -14,7 +13,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
-import type { Assignment, GroupDetail, Invitation, User } from "@/lib/types";
+import type { GroupDetail, Invitation, User } from "@/lib/types";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -25,7 +24,7 @@ import { Field, Input } from "@/components/ui/Field";
 import { Select } from "@/components/ui/Field";
 import { LoadingBlock, ErrorState, EmptyState } from "@/components/ui/States";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { CoinBalance, DueBadge } from "@/components/common";
+import { CoinBalance } from "@/components/common";
 import { useToast } from "@/contexts/ToastContext";
 import { cn, formatDate } from "@/lib/utils";
 import { groupColor } from "@/lib/groupColors";
@@ -52,11 +51,6 @@ export default function GroupDetailPage() {
   const { data: allStudents = [] } = useQuery<User[]>({
     queryKey: ["teacher-students"],
     queryFn: () => api.get("/teacher/students"),
-  });
-
-  const { data: assignments = [] } = useQuery<Assignment[]>({
-    queryKey: ["teacher-assignments"],
-    queryFn: () => api.get("/teacher/assignments"),
   });
 
   const candidates = useMemo(() => {
@@ -98,8 +92,6 @@ export default function GroupDetailPage() {
     },
     onError: (error: Error) => toast.error("Taklif yuborilmadi", error.message),
   });
-
-  const groupAssignments = assignments.filter((item) => item.group_id === groupId);
 
   const copyLink = async () => {
     if (!inviteResult?.invite_link) return;
@@ -195,49 +187,18 @@ export default function GroupDetailPage() {
         <div className="space-y-4">
           <Card className="p-5">
             <h3 className="text-sm font-bold">Guruh statistikasi</h3>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl bg-app-soft p-3">
-                <p className="label-xs">A'zolar</p>
-                <p className="display mt-1 text-xl font-extrabold">{group.member_count}</p>
-              </div>
-              <div className="rounded-xl bg-app-soft p-3">
-                <p className="label-xs">Vazifalar</p>
-                <p className="display mt-1 text-xl font-extrabold">{group.assignment_count}</p>
-              </div>
+            <div className="mt-4 rounded-xl bg-app-soft p-3">
+              <p className="label-xs">A'zolar</p>
+              <p className="display mt-1 text-xl font-extrabold">{group.member_count}</p>
             </div>
-            <Link to={`/teacher/assignments?new=1&group=${group.id}`} className="mt-4 block">
-              <Button variant="secondary" className="w-full"><ClipboardList size={15} /> Guruhga vazifa</Button>
-            </Link>
-          </Card>
-
-          <Card className="p-5">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold">So'nggi vazifalar</h3>
-              <Link to="/teacher/assignments" className="text-[10px] font-semibold text-brand">Barchasi</Link>
-            </div>
-            {groupAssignments.length === 0 ? (
-              <p className="mt-3 text-[11px] text-muted">Bu guruhga hali vazifa berilmagan.</p>
-            ) : (
-              <div className="mt-3 space-y-2">
-                {groupAssignments.slice(0, 4).map((assignment) => (
-                  <div key={assignment.id} className="rounded-xl border border-line bg-app-soft/50 p-3">
-                    <p className="line-clamp-1 text-[11px] font-semibold">{assignment.title}</p>
-                    <div className="mt-1.5 flex items-center justify-between">
-                      <DueBadge assignment={assignment} />
-                      <span className="text-[10px] text-muted">{assignment.recipient_count} o'quvchi</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </Card>
 
           <Card className="border-brand/20 bg-brand/[0.04] p-5">
             <div className="flex items-center gap-2 text-[11px] font-bold text-brand"><ArrowRight size={13} /> Keyingi qadam</div>
             <p className="mt-2 text-[11px] leading-relaxed text-muted">
-              O'quvchilarga coin bering — haftalik reyting avtomatik shakllanadi.
+              O'quvchilarga coin bering — umumiy reyting avtomatik shakllanadi.
             </p>
-            <Link to="/teacher/coins"><Button size="sm" variant="secondary" className="mt-3 w-full">Coin berish</Button></Link>
+            <Link to={`/teacher/students?group=${group.id}`}><Button size="sm" variant="secondary" className="mt-3 w-full">Coin berish</Button></Link>
           </Card>
         </div>
       </div>

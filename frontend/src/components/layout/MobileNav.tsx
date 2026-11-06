@@ -1,4 +1,4 @@
-import { Bell, BookOpen, ClipboardList, Compass, LayoutDashboard, Library, Menu, UserRound, Users, UsersRound } from "lucide-react";
+import { BookOpen, Coins, Gift, LayoutDashboard, Library, Menu, Users, UsersRound } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -11,15 +11,15 @@ export function MobileNav({ onMore }: { onMore: () => void }) {
 
   const teacher: Item[] = [
     { to: "/teacher", label: "Asosiy", icon: LayoutDashboard, end: true },
-    { to: "/teacher/groups", label: "Guruh", icon: UsersRound },
     { to: "/teacher/students", label: "O‘quvchi", icon: Users },
-    { to: "/teacher/assignments", label: "Vazifa", icon: ClipboardList },
+    { to: "/teacher/groups", label: "Guruh", icon: UsersRound },
+    { to: "/teacher/rewards", label: "Do‘kon", icon: Gift },
   ];
   const student: Item[] = [
     { to: "/student", label: "Asosiy", icon: LayoutDashboard, end: true },
-    { to: "/student/assignments", label: "Vazifa", icon: ClipboardList },
+    { to: "/student/coins", label: "Coin", icon: Coins },
     { to: "/student/library", label: "Kitob", icon: Library },
-    { to: "/student/dictionary", label: "Lug‘at", icon: BookOpen },
+    { to: "/student/rewards", label: "Do‘kon", icon: Gift },
   ];
   const items = user.role === "teacher" ? teacher : student;
 

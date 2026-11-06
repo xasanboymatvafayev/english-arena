@@ -97,7 +97,7 @@ export function PushNotificationsButton({ className }: { className?: string }) {
         open={open}
         onClose={() => setOpen(false)}
         title="Bildirishnomalar"
-        subtitle="Yangi vazifa, e’lon, coin va sovg‘a xabarlari telefoningizga keladi."
+        subtitle="Yangi coin, sovg‘a va kitob xabarlari telefoningizga keladi."
         size="sm"
         footer={
           <Button variant="secondary" onClick={() => setOpen(false)}>

@@ -1,11 +1,9 @@
 import { NavLink, useLocation } from "react-router-dom";
 import {
-  Activity,
-  Bell,
   BookOpen,
   BookMarked,
-  ClipboardList,
   Coins,
+  Gift,
   GraduationCap,
   LayoutDashboard,
   LogOut,
@@ -15,8 +13,6 @@ import {
   UserRound,
   Users,
   UsersRound,
-  Gift,
-  MailPlus,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -29,22 +25,18 @@ type NavGroup = { title: string; items: NavItem[] };
 
 const teacherNav: NavGroup[] = [
   {
-    title: "Boshqaruv",
+    title: "Asosiy",
     items: [
       { to: "/teacher", label: "Boshqaruv paneli", icon: LayoutDashboard, end: true },
-      { to: "/teacher/groups", label: "Guruhlar", icon: UsersRound },
       { to: "/teacher/students", label: "O'quvchilar", icon: Users },
-      { to: "/teacher/invitations", label: "Takliflar", icon: MailPlus },
+      { to: "/teacher/groups", label: "Guruhlar", icon: UsersRound },
     ],
   },
   {
     title: "O'quv jarayoni",
     items: [
-      { to: "/teacher/assignments", label: "Vazifalar", icon: ClipboardList },
-      { to: "/teacher/coins", label: "Coinlar", icon: Coins },
-      { to: "/teacher/rewards", label: "Sovg'alar", icon: Gift },
+      { to: "/teacher/rewards", label: "Coin do'koni", icon: Gift },
       { to: "/teacher/library", label: "Kutubxona", icon: BookOpen },
-      { to: "/teacher/announcements", label: "E'lonlar", icon: Bell },
     ],
   },
   {
@@ -52,6 +44,7 @@ const teacherNav: NavGroup[] = [
     items: [
       { to: "/teacher/dictionary", label: "Lug'at", icon: BookMarked },
       { to: "/teacher/irregular-verbs", label: "Fe'llar", icon: MessageSquareText },
+      { to: "/teacher/leaderboard", label: "Reyting", icon: Trophy },
     ],
   },
 ];
@@ -61,9 +54,8 @@ const studentNav: NavGroup[] = [
     title: "Asosiy",
     items: [
       { to: "/student", label: "Boshqaruv paneli", icon: LayoutDashboard, end: true },
-      { to: "/student/assignments", label: "Vazifalar", icon: ClipboardList },
       { to: "/student/coins", label: "Coinlarim", icon: Coins },
-      { to: "/student/rewards", label: "Sovg'alar", icon: Gift },
+      { to: "/student/rewards", label: "Coin do'koni", icon: Gift },
       { to: "/student/leaderboard", label: "Reyting", icon: Trophy },
     ],
   },
@@ -73,13 +65,11 @@ const studentNav: NavGroup[] = [
       { to: "/student/library", label: "Kutubxona", icon: BookOpen },
       { to: "/student/dictionary", label: "Lug'at", icon: BookMarked },
       { to: "/student/irregular-verbs", label: "Fe'llar", icon: MessageSquareText },
-      { to: "/student/activity", label: "Faoliyatim", icon: Activity },
     ],
   },
   {
     title: "Boshqa",
     items: [
-      { to: "/student/announcements", label: "E'lonlar", icon: Bell },
       { to: "/student/profile", label: "Profil", icon: UserRound },
     ],
   },

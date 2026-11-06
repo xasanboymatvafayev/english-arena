@@ -42,7 +42,7 @@ export default function GroupsPage() {
       <PageHeader
         eyebrow="Boshqaruv"
         title="Guruhlar"
-        subtitle="Har bir guruh o'z o'quvchilari, vazifalari va reytingiga ega."
+        subtitle="Guruh yarating va o'quvchilarni biriktiring."
         actions={
           <Button onClick={() => { setEditing(null); setModalOpen(true); }}>
             <Plus size={16} /> Yangi guruh
