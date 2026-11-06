@@ -9,8 +9,6 @@ import {
   Coins,
   Crown,
   Flame,
-  Sparkles,
-  Target,
   Trophy,
   Users,
 } from "lucide-react";
@@ -81,30 +79,15 @@ export default function StudentDashboardPage() {
         </div>
       </Card>
 
-      {(data.badges.student_of_the_day || champion) && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {data.badges.student_of_the_day && (
-            <div className="flex items-center gap-3 rounded-2xl border border-amber-400/25 bg-gradient-to-r from-amber-400/[0.12] via-amber-400/[0.04] to-transparent p-4">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-gold-soft text-gold"><Sparkles size={20} /></span>
-              <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-amber-400">Kunning o'quvchisi</p>
-                <p className="truncate text-sm font-bold">Bugun siz tanlandingiz! 🎉</p>
-                {data.badges.student_of_the_day.note && <p className="truncate text-[10px] text-muted">“{data.badges.student_of_the_day.note}”</p>}
-              </div>
-              <Badge variant="gold">SOTD</Badge>
-            </div>
-          )}
-          {champion && (
-            <div className="flex items-center gap-3 rounded-2xl border border-brand/25 bg-gradient-to-r from-brand/[0.12] to-transparent p-4">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-brand/[0.12] text-brand"><Crown size={20} /></span>
-              <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-brand">Hafta chempioni</p>
-                <p className="truncate text-sm font-bold">Siz haftaning eng faol o'quvchisisiz!</p>
-                <p className="text-[10px] text-muted">{champion.coins} coin to'plangan</p>
-              </div>
-              <Badge variant="brand">Champion</Badge>
-            </div>
-          )}
+      {champion && (
+        <div className="flex items-center gap-3 rounded-2xl border border-brand/25 bg-gradient-to-r from-brand/[0.12] to-transparent p-4">
+          <span className="grid h-11 w-11 place-items-center rounded-xl bg-brand/[0.12] text-brand"><Crown size={20} /></span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-brand">Hafta chempioni</p>
+            <p className="truncate text-sm font-bold">Siz haftaning eng faol o'quvchisisiz!</p>
+            <p className="text-[10px] text-muted">{champion.coins} coin to'plangan</p>
+          </div>
+          <Badge variant="brand">Champion</Badge>
         </div>
       )}
 
@@ -180,28 +163,6 @@ export default function StudentDashboardPage() {
         </div>
 
         <div className="space-y-4">
-          <Card className="p-5">
-            <div className="flex items-center gap-2">
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-500/[0.12] text-emerald-400"><Target size={15} /></span>
-              <div><h2 className="text-sm font-bold">Haftalik maqsad</h2><p className="text-[10px] text-muted">Ustoz belgilagan maqsadlar</p></div>
-            </div>
-            {data.goals.length === 0 ? (
-              <p className="mt-3 text-[11px] leading-relaxed text-muted">Bu hafta uchun maqsad belgilanmagan.</p>
-            ) : (
-              <div className="mt-3 space-y-3">
-                {data.goals.map((goal) => (
-                  <div key={goal.id}>
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="truncate text-[11px] font-semibold">{goal.title}</p>
-                      <span className="text-[10px] font-bold text-muted">{goal.progress?.value || 0}/{goal.target_value}</span>
-                    </div>
-                    <Progress value={goal.progress?.percent || 0} className="mt-1.5" showLabel />
-                  </div>
-                ))}
-              </div>
-            )}
-          </Card>
-
           <Card className="p-5">
             <div className="flex items-center justify-between">
               <div><h2 className="text-sm font-bold">Haftalik faollik</h2><p className="text-[10px] text-muted">Platformadagi harakatlaringiz</p></div>

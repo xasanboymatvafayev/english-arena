@@ -1,15 +1,12 @@
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  ArrowUpRight,
-  Award,
   Check,
   ClipboardList,
   Coins,
   Crown,
   Gift,
   Plus,
-  Sparkles,
   TrendingUp,
   UserPlus,
   Users,
@@ -25,7 +22,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
-import { LoadingBlock, ErrorState, EmptyState } from "@/components/ui/States";
+import { LoadingBlock, ErrorState } from "@/components/ui/States";
 import { ActivityIcon } from "@/components/common";
 import { useToast } from "@/contexts/ToastContext";
 import { formatNumber, relativeTime } from "@/lib/utils";
@@ -136,9 +133,6 @@ export default function TeacherDashboardPage() {
           <div className="relative mt-6">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-xs font-bold">Haftalik top 5</p>
-              <Link to="/teacher/motivation" className="text-[11px] font-semibold text-brand hover:underline">
-                Barchasi <ArrowUpRight size={11} className="inline" />
-              </Link>
             </div>
             <div className="space-y-1.5">
               {dash.top_students.length === 0 && <p className="text-xs text-muted">Ma'lumot yo'q</p>}
@@ -158,30 +152,6 @@ export default function TeacherDashboardPage() {
         </Card>
 
         <div className="space-y-4">
-          <Card className="relative overflow-hidden p-6">
-            <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand/20 blur-3xl" />
-            <div className="relative flex items-center justify-between">
-              <p className="label-xs">Kunning o'quvchisi</p>
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-brand/[0.12] text-brand"><Sparkles size={17} /></div>
-            </div>
-            {dash.student_of_the_day ? (
-              <div className="relative mt-4 flex flex-col items-center text-center">
-                <Avatar first={dash.student_of_the_day.student_name.split(" ")[0]} last={dash.student_of_the_day.student_name.split(" ")[1]} size="xl" ring />
-                <p className="mt-3 text-sm font-bold">{dash.student_of_the_day.student_name}</p>
-                <p className="text-[11px] text-muted">{dash.student_of_the_day.group_name}</p>
-                {dash.student_of_the_day.note && (
-                  <p className="mt-2 rounded-xl bg-app-soft px-3 py-2 text-[11px] leading-relaxed text-muted">“{dash.student_of_the_day.note}”</p>
-                )}
-                <Link to="/teacher/motivation" className="mt-3 text-[11px] font-semibold text-brand hover:underline">O'zgartirish</Link>
-              </div>
-            ) : (
-              <div className="relative mt-4">
-                <EmptyState icon={<Award size={20} />} title="Hali tanlanmagan" description="Bugungi eng faol o'quvchini tanlang." className="border-0 bg-transparent px-0 py-4" />
-                <Link to="/teacher/motivation"><Button variant="secondary" size="sm" className="w-full">Tanlash</Button></Link>
-              </div>
-            )}
-          </Card>
-
           <Card className="p-5">
             <div className="flex items-center justify-between">
               <p className="text-xs font-bold">Kutilayotgan so'rovlar</p>

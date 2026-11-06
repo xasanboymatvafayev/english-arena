@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Activity, BookOpen, Coins, Flame, Sparkles, Target, TrendingUp } from "lucide-react";
+import { Activity, BookOpen, Coins, Flame, TrendingUp } from "lucide-react";
 import { api } from "@/lib/api";
 import type { ActivityItem } from "@/lib/types";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -117,10 +117,9 @@ export default function StudentActivityPage() {
         )}
       </Card>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {[
           { icon: BookOpen, title: "Har kuni 10 daqiqa o'qish", text: "Kutubxonadan kichik bo'lim o'qib, streakni davom ettiring.", tone: "text-brand bg-brand/[0.10]" },
-          { icon: Target, title: "Haftalik maqsad", text: "Ustoz qo'ygan maqsadni dashboardda kuzatib boring.", tone: "text-emerald-400 bg-emerald-500/[0.10]" },
           { icon: Coins, title: "Coin to'plang", text: "Faol qatnashib, sovg'alar do'konidan o'zingizga sovg'a oling.", tone: "text-amber-400 bg-amber-500/[0.10]" },
         ].map((item) => (
           <Card key={item.title} className="flex items-start gap-3 p-4">

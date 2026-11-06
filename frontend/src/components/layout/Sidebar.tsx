@@ -1,7 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Activity,
-  Award,
   Bell,
   BookOpen,
   BookMarked,
@@ -12,7 +11,6 @@ import {
   LogOut,
   MessageSquareText,
   Sparkles,
-  Target,
   Trophy,
   UserRound,
   Users,
@@ -47,7 +45,6 @@ const teacherNav: NavGroup[] = [
       { to: "/teacher/rewards", label: "Sovg'alar", icon: Gift },
       { to: "/teacher/library", label: "Kutubxona", icon: BookOpen },
       { to: "/teacher/announcements", label: "E'lonlar", icon: Bell },
-      { to: "/teacher/motivation", label: "Motivatsiya", icon: Target },
     ],
   },
   {

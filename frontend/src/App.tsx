@@ -17,7 +17,6 @@ import TeacherCoinsPage from "@/pages/teacher/CoinsPage";
 import TeacherRewardsPage from "@/pages/teacher/RewardsPage";
 import TeacherLibraryPage from "@/pages/teacher/LibraryPage";
 import TeacherAnnouncementsPage from "@/pages/teacher/AnnouncementsPage";
-import MotivationPage from "@/pages/teacher/MotivationPage";
 import StudentDashboardPage from "@/pages/student/DashboardPage";
 import StudentAssignmentsPage from "@/pages/student/AssignmentsPage";
 import StudentCoinsPage from "@/pages/student/CoinsPage";
@@ -58,7 +57,6 @@ export default function App() {
           <Route path="rewards" element={<TeacherRewardsPage />} />
           <Route path="library" element={<TeacherLibraryPage />} />
           <Route path="announcements" element={<TeacherAnnouncementsPage />} />
-          <Route path="motivation" element={<MotivationPage />} />
           <Route path="dictionary" element={<DictionaryPage />} />
           <Route path="irregular-verbs" element={<IrregularVerbsPage />} />
         </Route>
