@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
@@ -10,6 +10,7 @@ from app.models import Announcement, Group, GroupMember, User
 from app.schemas.common import Message
 from app.schemas.engagement import AnnouncementCreate
 from app.services.activity import log_activity
+from app.services.push import send_push_to_users
 from app.services.serializers import iso
 
 router = APIRouter(prefix="/teacher/announcements", tags=["announcements"])
@@ -45,6 +46,7 @@ def teacher_list(teacher: User = Depends(require_teacher), db: Session = Depends
 @router.post("", response_model=dict, status_code=201)
 def create_announcement(
     payload: AnnouncementCreate,
+    background: BackgroundTasks,
     teacher: User = Depends(require_teacher),
     db: Session = Depends(get_db),
 ):
@@ -63,13 +65,17 @@ def create_announcement(
     )
     db.add(announcement)
     db.flush()
-    student_ids = db.execute(
-        select(User.id).where(User.teacher_id == teacher.id, User.role == "student")
-    ).scalars()
-    if group:
-        student_ids = db.execute(
-            select(GroupMember.user_id).where(GroupMember.group_id == group.id)
+    student_ids = list(
+        db.execute(
+            select(User.id).where(User.teacher_id == teacher.id, User.role == "student")
         ).scalars()
+    )
+    if group:
+        student_ids = list(
+            db.execute(
+                select(GroupMember.user_id).where(GroupMember.group_id == group.id)
+            ).scalars()
+        )
     for student_id in student_ids:
         log_activity(
             db,
@@ -81,6 +87,14 @@ def create_announcement(
         )
     db.commit()
     db.refresh(announcement)
+    background.add_task(
+        send_push_to_users,
+        student_ids,
+        f"E'lon: {announcement.title}",
+        announcement.body[:200],
+        "/student/announcements",
+        f"announcement-{announcement.id}",
+    )
     return _out(announcement)
 
 

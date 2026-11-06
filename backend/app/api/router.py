@@ -13,6 +13,7 @@ from app.api.routes import (
     groups,
     invitations,
     leaderboard,
+    push,
     rewards_student,
     rewards_teacher,
     student_account,
@@ -41,6 +42,7 @@ api_router.include_router(announcements.router)
 api_router.include_router(announcements.student_router)
 api_router.include_router(engagement.router)
 api_router.include_router(engagement.student_router)
+api_router.include_router(push.router)
 api_router.include_router(leaderboard.router)
 api_router.include_router(student_assignments.router)
 api_router.include_router(student_account.router)

@@ -1,4 +1,5 @@
 import os
+import tempfile
 import uuid
 
 os.environ["DATABASE_URL"] = os.environ.get(
@@ -8,6 +9,8 @@ os.environ["DATABASE_URL"] = os.environ.get(
 os.environ["SECRET_KEY"] = "test-secret-key-for-english-arena-tests-123456"
 os.environ["ENVIRONMENT"] = "test"
 os.environ["APP_URL"] = "http://localhost:5173"
+# Keep test uploads out of the real backend/uploads folder.
+os.environ["UPLOAD_DIR"] = tempfile.mkdtemp(prefix="english-arena-test-uploads-")
 
 import pytest
 from fastapi.testclient import TestClient

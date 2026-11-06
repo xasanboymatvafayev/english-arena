@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -11,6 +11,7 @@ from app.models import Assignment, AssignmentRecipient, Group, GroupMember, User
 from app.schemas.common import Message
 from app.services.activity import log_activity
 from app.services.files import delete_key, save_attachment
+from app.services.push import send_push_to_users
 from app.services.serializers import assignment_out
 from app.services.timeutils import APP_TZ
 
@@ -49,6 +50,7 @@ def list_assignments(
 
 @router.post("", response_model=dict, status_code=201)
 def create_assignment(
+    background: BackgroundTasks,
     title: str = Form(..., min_length=2, max_length=200),
     description: str = Form(default=""),
     group_id: str | None = Form(default=None),
@@ -116,6 +118,14 @@ def create_assignment(
         )
     db.commit()
     db.refresh(assignment)
+    background.add_task(
+        send_push_to_users,
+        recipients,
+        f"Yangi vazifa: {assignment.title}",
+        (description or "Vazifa yuborildi")[:200],
+        "/student/assignments",
+        f"assignment-{assignment.id}",
+    )
     return assignment_out(assignment, group_name=group.name if group else None, recipient_count=len(recipients))
 
 

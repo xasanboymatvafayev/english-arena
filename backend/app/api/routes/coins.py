@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -10,6 +10,7 @@ from app.models import CoinTransaction, User
 from app.schemas.coin import CoinAdjustRequest
 from app.services.activity import log_activity
 from app.services.coins import award_or_deduct
+from app.services.push import send_push_to_users
 from app.services.serializers import tx_out
 
 router = APIRouter(prefix="/teacher/coins", tags=["coins"])
@@ -18,6 +19,7 @@ router = APIRouter(prefix="/teacher/coins", tags=["coins"])
 @router.post("", response_model=dict, status_code=201)
 def adjust_coins(
     payload: CoinAdjustRequest,
+    background: BackgroundTasks,
     teacher: User = Depends(require_teacher),
     db: Session = Depends(get_db),
 ):
@@ -46,6 +48,14 @@ def adjust_coins(
         actor_id=teacher.id,
     )
     db.commit()
+    background.add_task(
+        send_push_to_users,
+        [student.id],
+        "Coin berildi" if payload.amount > 0 else "Coin ayirildi",
+        f"{abs(payload.amount)} coin: {payload.reason}",
+        "/student/coins",
+        "coins",
+    )
     return {
         "balance": student.coin_balance,
         "transaction": tx_out(transaction, teacher.full_name),

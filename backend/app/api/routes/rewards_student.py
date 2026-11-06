@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -9,6 +9,7 @@ from app.db.session import get_db
 from app.models import Reward, RewardRequest, RewardRequestStatus, User
 from app.services.activity import log_activity
 from app.services.coins import apply_coin_transaction
+from app.services.push import send_push_to_users
 from app.services.serializers import request_out, reward_out
 
 router = APIRouter(prefix="/student/rewards", tags=["rewards"])
@@ -50,6 +51,7 @@ def shop( student: User = Depends(require_student), db: Session = Depends(get_db
 @router.post("/{reward_id}/request", response_model=dict, status_code=201)
 def request_reward(
     reward_id: uuid.UUID,
+    background: BackgroundTasks,
     student: User = Depends(require_student),
     db: Session = Depends(get_db),
 ):
@@ -101,6 +103,14 @@ def request_reward(
     )
     db.commit()
     db.refresh(request)
+    background.add_task(
+        send_push_to_users,
+        [reward.teacher_id],
+        "Yangi sovg'a so'rovi",
+        f"{student.full_name}: {reward.title}",
+        "/teacher/rewards",
+        "reward-request",
+    )
     return request_out(request, student=student, reward=reward)
 
 

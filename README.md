@@ -34,7 +34,9 @@ Loyiha **noldan** yozilgan: React + TypeScript frontend, FastAPI + PostgreSQL ba
 
 ### Dizayn
 - Premium dark + light rejim, CSS variables, silliq animatsiyalar.
-- Responsive: desktop, planshet, telefon (sidebar drawer).
+- Responsive: desktop, planshet, telefon (sidebar drawer + pastki navigatsiya).
+- **PWA**: telefonga o‘rnatish, offline app shell, service worker.
+- **Web Push**: vazifa, e’lon, coin, sovg‘a va kitob bildirishnomalari.
 - Loading, empty, error holatlari; toast bildirishnomalar; accessible focus holatlari.
 
 ---
@@ -49,7 +51,7 @@ Loyiha **noldan** yozilgan: React + TypeScript frontend, FastAPI + PostgreSQL ba
 | Database | PostgreSQL 14+ |
 | Auth | JWT (access + refresh), bcrypt_sha256 |
 | Email | EmailJS server-side REST API |
-| Deploy | Vercel (frontend), Railway (backend + PostgreSQL) |
+| Deploy | Vercel (frontend), Railway (backend), Neon yoki Railway PostgreSQL |
 
 ---
 
@@ -63,7 +65,7 @@ english-arena/
 │   │   │                      # rewards, books, dictionary, engagement, dashboards
 │   │   ├── core/              # config, security, dependencies
 │   │   ├── db/                # base, session
-│   │   ├── models/            # 22 ta SQLAlchemy model
+│   │   ├── models/            # 23 ta SQLAlchemy model
 │   │   ├── schemas/           # Pydantic request modellari
 │   │   ├── services/          # email, files, coins, ranking, goals, dictionary
 │   │   ├── scripts/           # create_teacher, sample fayl generatorlari
@@ -203,7 +205,7 @@ $env:TEST_DATABASE_URL="postgresql+psycopg://postgres:postgres@127.0.0.1:5432/en
 pytest -q
 ```
 
-11 ta test: auth/rollar, taklif (bir martalik + muddat), coin atomikligi, sovg'a escrow/refund/approve, vazifa snapshot va ko'rilganligi, kutubxona/progress/fayl tokeni, ustozlar izolyatsiyasi, reyting davrlari, haftalik maqsad, dashboard.
+12 ta test: auth/rollar, taklif (bir martalik + muddat), coin atomikligi, sovg'a escrow/refund/approve, vazifa snapshot va ko'rilganligi, kutubxona/progress/fayl tokeni, ustozlar izolyatsiyasi, reyting davrlari, haftalik maqsad, dashboard, push endpointlari.
 
 Frontend build tekshiruvi:
 
@@ -218,7 +220,10 @@ npm run build
 
 | Fayl | Mazmuni |
 |---|---|
-| [DEPLOYMENT.md](DEPLOYMENT.md) | PowerShell, Railway, Vercel, domen, CORS, backup — ipidan ignasigacha |
+| [RAILWAY_VERCEL_DEPLOY.md](RAILWAY_VERCEL_DEPLOY.md) | **Railway + Neon + Vercel** ga ko‘chirish (Render uxlab qolsa) |
+| [PWA_PUSH_SETUP.md](PWA_PUSH_SETUP.md) | PWA o‘rnatish, VAPID, telefon push bildirishnomalari |
+| [RENDER_VERCEL_DEPLOY.md](RENDER_VERCEL_DEPLOY.md) | Render + Neon + Vercel varianti |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | PowerShell, Railway, Vercel, domen, CORS, backup — alternativ variant |
 | [EMAILJS_SETUP.md](EMAILJS_SETUP.md) | EmailJS hisobi, service, professional HTML template, kalitlar, test |
 | [DATABASE.md](DATABASE.md) | Jadvallar, bog'lanishlar, constraintlar, tranzaksiyalar, migration, backup |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Qatlamlar, auth, taklif oqimi, tranzaksiyalar, xavfsizlik qarorlari |

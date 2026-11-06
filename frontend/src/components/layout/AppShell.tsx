@@ -6,6 +6,9 @@ import { Logo } from "./Logo";
 import { Sidebar } from "./Sidebar";
 import { ThemeToggle } from "./ThemeToggle";
 import { Avatar } from "@/components/ui/Avatar";
+import { PushNotificationsButton } from "@/components/pwa/PushNotificationsButton";
+import { PwaInstallPrompt } from "@/components/pwa/PwaInstallPrompt";
+import { MobileNav } from "./MobileNav";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function AppShell() {
@@ -76,6 +79,7 @@ export function AppShell() {
               </p>
             </div>
             <div className="ml-auto flex items-center gap-2">
+              <PushNotificationsButton />
               <ThemeToggle className="hidden sm:grid" />
               <div className="flex items-center gap-2 rounded-xl border border-line bg-app-surface py-1 pl-1 pr-3">
                 <Avatar first={user?.first_name} last={user?.last_name} size="xs" />
@@ -92,14 +96,16 @@ export function AppShell() {
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <main className="mx-auto w-full max-w-[1440px] px-4 pb-28 pt-6 sm:px-6 lg:px-8 lg:pb-8 lg:pt-8">
           <Outlet />
         </main>
 
-        <footer className="mx-auto max-w-[1440px] px-4 pb-8 pt-2 text-[10px] text-muted/70 sm:px-6 lg:px-8">
+        <footer className="mx-auto max-w-[1440px] px-4 pb-28 pt-2 text-[10px] text-muted/70 sm:px-6 lg:px-8 lg:pb-8">
           © {new Date().getFullYear()} English Arena · Premium ingliz tili platformasi
         </footer>
       </div>
+      <MobileNav onMore={() => setMobileOpen(true)} />
+      <PwaInstallPrompt />
     </div>
   );
 }

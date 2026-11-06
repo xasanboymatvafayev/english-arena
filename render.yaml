@@ -51,6 +51,12 @@ services:
         sync: false
       - key: EMAILJS_PRIVATE_KEY
         sync: false
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: VAPID_SUBJECT
+        sync: false
     # Pullik rejada doimiy fayllar uchun:
     # disk:
     #   name: english-arena-data

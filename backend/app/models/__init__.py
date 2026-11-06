@@ -11,6 +11,7 @@ from app.models.dictionary import (
 from app.models.engagement import ActivityLog, Announcement, StudentOfTheDay, WeeklyGoal
 from app.models.group import Group, GroupMember
 from app.models.invitation import Invitation, InvitationStatus
+from app.models.push import PushSubscription
 from app.models.reward import Reward, RewardRequest, RewardRequestStatus
 from app.models.user import User, UserRole
 
@@ -29,6 +30,7 @@ __all__ = [
     "GroupMember",
     "Invitation",
     "InvitationStatus",
+    "PushSubscription",
     "IrregularVerb",
     "ReadingProgress",
     "RecentSearch",

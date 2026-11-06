@@ -114,6 +114,9 @@ postgresql://neondb_owner:Abc%40123@ep-.../neondb?sslmode=require
 | `EMAILJS_TEMPLATE_ID` | EmailJS template ID |
 | `EMAILJS_PUBLIC_KEY` | EmailJS public key |
 | `EMAILJS_PRIVATE_KEY` | EmailJS private key |
+| `VAPID_PUBLIC_KEY` | Web Push public key |
+| `VAPID_PRIVATE_KEY` | Web Push private key |
+| `VAPID_SUBJECT` | `mailto:sizning@emailingiz.com` |
 
 6. **Apply / Create**.
 7. Render build va deployni boshlaydi.

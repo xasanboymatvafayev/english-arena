@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -13,6 +13,7 @@ from app.schemas.reward import RewardUpdate
 from app.services.activity import log_activity
 from app.services.coins import apply_coin_transaction
 from app.services.files import delete_key, save_image
+from app.services.push import send_push_to_users
 from app.services.serializers import request_out, reward_out
 
 router = APIRouter(prefix="/teacher", tags=["rewards"])
@@ -148,6 +149,7 @@ def list_requests(
 @router.post("/reward-requests/{request_id}/approve", response_model=dict)
 def approve_request(
     request_id: uuid.UUID,
+    background: BackgroundTasks,
     teacher: User = Depends(require_teacher),
     db: Session = Depends(get_db),
 ):
@@ -171,12 +173,21 @@ def approve_request(
     )
     db.commit()
     db.refresh(request)
+    background.add_task(
+        send_push_to_users,
+        [request.student_id],
+        "Sovg'a tasdiqlandi ✅",
+        request.reward.title,
+        "/student/rewards",
+        "reward-approved",
+    )
     return request_out(request)
 
 
 @router.post("/reward-requests/{request_id}/reject", response_model=dict)
 def reject_request(
     request_id: uuid.UUID,
+    background: BackgroundTasks,
     teacher: User = Depends(require_teacher),
     db: Session = Depends(get_db),
 ):
@@ -213,4 +224,12 @@ def reject_request(
     )
     db.commit()
     db.refresh(request)
+    background.add_task(
+        send_push_to_users,
+        [request.student_id],
+        "Sovg'a rad etildi",
+        f"{request.price_snapshot} coin qaytarildi: {request.reward.title}",
+        "/student/rewards",
+        "reward-rejected",
+    )
     return request_out(request)

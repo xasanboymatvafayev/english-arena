@@ -1,7 +1,7 @@
 import uuid
 from datetime import date, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
@@ -11,6 +11,7 @@ from app.models import Group, GroupMember, StudentOfTheDay, User, WeeklyGoal
 from app.schemas.engagement import GoalCreate, SOTDCreate
 from app.services.activity import log_activity
 from app.services.goals import goal_out, goal_progress
+from app.services.push import send_push_to_users
 from app.services.serializers import sotd_out
 from app.services.timeutils import today_local, week_start_for
 
@@ -43,6 +44,7 @@ def sotd_history(
 @router.post("/student-of-the-day", response_model=dict)
 def set_sotd(
     payload: SOTDCreate,
+    background: BackgroundTasks,
     teacher: User = Depends(require_teacher),
     db: Session = Depends(get_db),
 ):
@@ -82,6 +84,14 @@ def set_sotd(
     )
     db.commit()
     db.refresh(entry)
+    background.add_task(
+        send_push_to_users,
+        [student.id],
+        "Kunning o'quvchisi ⭐",
+        "Bugun siz tanlandingiz!",
+        "/student",
+        "sotd",
+    )
     return sotd_out(entry)
 
 

@@ -1,4 +1,6 @@
-# English Arena — to'liq deployment qo'llanmasi
+# English Arena — to'liq deployment qo'llanmasi (Railway varianti)
+
+> Agar backendni **Railway**ga ko‘chirmoqchi bo‘lsangiz — [RAILWAY_VERCEL_DEPLOY.md](RAILWAY_VERCEL_DEPLOY.md). Render+Neon varianti — [RENDER_VERCEL_DEPLOY.md](RENDER_VERCEL_DEPLOY.md). Bu fayl Railway varianti uchun.
 
 Bu qo'llanma boshidan oxirigacha: kompyuterda ishga tushirish → PostgreSQL → migration → birinchi ustoz → EmailJS → Railway → Vercel → domen → backup.
 

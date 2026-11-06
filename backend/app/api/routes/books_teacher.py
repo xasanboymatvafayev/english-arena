@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -10,6 +10,7 @@ from app.models import Book, BookFavorite, ReadingProgress, User
 from app.schemas.book import BookUpdate
 from app.schemas.common import Message
 from app.services.files import delete_key, save_book_file, save_image
+from app.services.push import send_push_to_users
 from app.services.serializers import book_out
 from app.core.config import settings
 
@@ -32,6 +33,7 @@ def list_books(teacher: User = Depends(require_teacher), db: Session = Depends(g
 
 @router.post("", response_model=dict, status_code=201)
 def create_book(
+    background: BackgroundTasks,
     title: str = Form(..., min_length=1, max_length=200),
     author: str = Form(..., min_length=1, max_length=150),
     description: str = Form(default=""),
@@ -68,6 +70,20 @@ def create_book(
         delete_key(cover_key)
         raise
     db.refresh(book)
+    if book.is_published:
+        student_ids = list(
+            db.execute(
+                select(User.id).where(User.teacher_id == teacher.id, User.role == "student")
+            ).scalars()
+        )
+        background.add_task(
+            send_push_to_users,
+            student_ids,
+            "Yangi kitob 📚",
+            f"{book.title} — {book.level} daraja",
+            "/student/library",
+            f"book-{book.id}",
+        )
     return book_out(book)
 
 

@@ -492,3 +492,30 @@ def test_student_dashboard_and_engagement(client, db):
     assert data["badges"]["student_of_the_day"]["note"] == "Eng faol"
     assert data["announcements"][0]["title"] == "Mock test"
     assert data["student"]["group"]["name"] == "Test Group"
+
+
+def test_push_endpoints_degrade_gracefully_without_vapid(client, db):
+    teacher = create_teacher(db)
+    headers = login(client, teacher.email, "Teacher12345")
+
+    key = client.get("/api/push/public-key", headers=headers)
+    assert key.status_code == 200
+    assert key.json()["enabled"] is False
+
+    status = client.get("/api/push/status", headers=headers)
+    assert status.status_code == 200
+    assert status.json()["subscriptions"] == 0
+
+    subscribe = client.post(
+        "/api/push/subscribe",
+        headers=headers,
+        json={
+            "endpoint": "https://example.com/push/fake-endpoint",
+            "keys": {"p256dh": "B" + "a" * 80, "auth": "a" * 20},
+        },
+    )
+    assert subscribe.status_code == 503
+
+    test = client.post("/api/push/test", headers=headers)
+    assert test.status_code == 200
+    assert test.json()["sent"] == 0

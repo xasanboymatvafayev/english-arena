@@ -24,7 +24,7 @@ Fayllar (PDF, EPUB, muqova, sovg'a rasmi) diskda, volume ichida saqlanadi. Bazad
 | API | `app/api/routes/*` | HTTP endpointlar, validatsiya, status kodlar |
 | Dependencies | `app/core/deps.py` | JWT, rollar, egalik (`ensure_own_student`, `ensure_owned_group`) |
 | Services | `app/services/*` | coin tranzaksiyasi, reyting, streak, fayl, email, lug'at, maqsad |
-| Models | `app/models/*` | 22 jadval, FK, unique, check, index |
+| Models | `app/models/*` | 23 jadval, FK, unique, check, index |
 | Schemas | `app/schemas/*` | Pydantic request modellari |
 | DB | `app/db/*` | engine, session, Base |
 | Migration | `alembic/` | schema versiyalari |
@@ -107,7 +107,17 @@ Token bir martalik: `status='accepted'` dan keyin qayta ishlatilmaydi. Muddat o'
 - `pages/*` — role bo'yicha sahifalar; shared dictionary/verbs ikkala panelda.
 - Reader alohida full-screen route: `/student/library/:bookId/read`.
 
-## 10. Dizayn tizimi
+## 10. PWA va push
+
+- `frontend/public/manifest.webmanifest` — PWA metadata/ikonkalar.
+- `frontend/public/sw.js` — app shell keshi, `push`, `notificationclick`.
+- `app/models/push.py` — qurilma obunalari (`push_subscriptions`).
+- `app/services/push.py` — VAPID + `pywebpush`, expired obunalarni tozalash.
+- VAPID private key env’da base64 ko‘rinishida; vaqtinchalik PEM fayl orqali pywebpush’ga beriladi.
+- Bildirishnomalar `BackgroundTasks` orqali yuboriladi; asosiy API javobi bloklanmaydi.
+- Triggerlar: vazifa, e’lon, coin, sovg‘a so‘rovi/holati, yangi kitob, Student of the Day.
+
+## 11. Dizayn tizimi
 
 - CSS variables orqali light/dark.
 - Tailwind semantic ranglar: `app`, `ink`, `muted`, `line`, `brand`, `gold`.
@@ -115,7 +125,7 @@ Token bir martalik: `status='accepted'` dan keyin qayta ishlatilmaydi. Muddat o'
 - Bir xil radius (xl/2xl/3xl), spacing, focus ring, animatsiyalar.
 - Loading (skeleton/spinner), empty, error holatlari barcha sahifalarda.
 
-## 11. Kengaytirish nuqtalari
+## 12. Kengaytirish nuqtalari
 
 - Email provayderini almashtirish: `app/services/emailjs.py`.
 - Fayllarni S3/R2 ga ko'chirish: `app/services/files.py` interfeysini saqlab, implementatsiyani almashtiring.

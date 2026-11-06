@@ -138,6 +138,11 @@ Indekslar: `email`, `username`, `role`, `teacher_id`, `(role, is_active)`.
 - `CHECK` — aynan bitta target (student yoki group).
 - `UNIQUE (student_id, week_start, metric)`, `UNIQUE (group_id, week_start, metric)`.
 
+### `push_subscriptions`
+`id`, `user_id` (FK users CASCADE), `endpoint` (unique), `p256dh`, `auth`, `user_agent`, `created_at`, `last_seen_at`.
+- Bitta foydalanuvchi bir nechta qurilmada obuna bo‘lishi mumkin.
+- 404/410 qaytargan endpointlar avtomatik o‘chiriladi.
+
 ### `activity_logs`
 `id`, `user_id`, `actor_id`, `type`, `title`, `meta` JSONB, `created_at`.
 - Indekslar: `(user_id, created_at)`, `(type, created_at)`.
@@ -214,6 +219,7 @@ alembic upgrade head
 Migrationlar:
 1. `caf70aea99df` — initial schema (22 jadval).
 2. `66fa59f2dd66` — pending reward request uniqueness.
+3. `261b75e7eadd` — push subscriptions.
 
 Productionda migratsiyani `start.sh` avtomatik bajaradi (`alembic upgrade head`).
 

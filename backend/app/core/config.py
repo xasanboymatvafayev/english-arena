@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     emailjs_api_url: str = "https://api.emailjs.com/api/v1.0/email/send"
     invitation_expire_days: int = 7
 
+    # Web Push (VAPID). Generate with: python -m app.scripts.generate_vapid_keys
+    vapid_public_key: str = ""
+    vapid_private_key: str = ""
+    vapid_subject: str = "mailto:admin@englisharena.uz"
+
     upload_dir: str = "uploads"
     max_image_mb: int = 4
     max_book_mb: int = 40
