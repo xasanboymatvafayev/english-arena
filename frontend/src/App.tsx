@@ -5,6 +5,8 @@ import { AppShell } from "@/components/layout/AppShell";
 import { RequireRole } from "@/components/layout/RequireRole";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
+import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
+import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import TeacherDashboardPage from "@/pages/teacher/DashboardPage";
 import GroupsPage from "@/pages/teacher/GroupsPage";
@@ -37,6 +39,8 @@ export default function App() {
       <Route path="/" element={<HomeRedirect />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       <Route element={<RequireRole role="teacher" />}>
         <Route path="/teacher" element={<AppShell />}>

@@ -28,10 +28,12 @@ class Settings(BaseSettings):
 
     emailjs_service_id: str = ""
     emailjs_template_id: str = ""
+    emailjs_reset_template_id: str = ""
     emailjs_public_key: str = ""
     emailjs_private_key: str = ""
     emailjs_api_url: str = "https://api.emailjs.com/api/v1.0/email/send"
     invitation_expire_days: int = 7
+    password_reset_expire_minutes: int = 30
 
     # Web Push (VAPID). Generate with: python -m app.scripts.generate_vapid_keys
     vapid_public_key: str = ""
@@ -68,6 +70,12 @@ class Settings(BaseSettings):
     def emailjs_configured(self) -> bool:
         return all(
             [self.emailjs_service_id, self.emailjs_template_id, self.emailjs_public_key]
+        )
+
+    @property
+    def emailjs_reset_configured(self) -> bool:
+        return all(
+            [self.emailjs_service_id, self.emailjs_reset_template_id, self.emailjs_public_key]
         )
 
 

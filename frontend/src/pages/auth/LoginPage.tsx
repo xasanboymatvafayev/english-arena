@@ -152,6 +152,12 @@ export default function LoginPage() {
               </div>
             </Field>
 
+            <div className="flex justify-end">
+              <Link to="/forgot-password" className="text-[11px] font-semibold text-brand hover:underline">
+                Parolni unutdingizmi?
+              </Link>
+            </div>
+
             {error && (
               <div className="rounded-xl border border-rose-500/25 bg-rose-500/[0.08] px-3.5 py-3 text-xs font-medium text-rose-400">
                 {error}
