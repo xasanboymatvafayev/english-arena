@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarClock, Check, ClipboardList, Download, FileText, Paperclip, Search } from "lucide-react";
-import { api } from "@/lib/api";
+import { absoluteApiUrl, api } from "@/lib/api";
 import type { Assignment } from "@/lib/types";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
@@ -121,7 +121,7 @@ export default function StudentAssignmentsPage() {
               <p className="whitespace-pre-wrap text-xs leading-relaxed">{detail.data.description || "Tavsif kiritilmagan"}</p>
             </div>
             {detail.data.attachment && (
-              <a href={detail.data.attachment.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl border border-line bg-app-surface p-3 transition hover:border-brand/30">
+              <a href={absoluteApiUrl(detail.data.attachment.url)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl border border-line bg-app-surface p-3 transition hover:border-brand/30">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-rose-500/10 text-rose-400"><FileText size={18} /></span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-xs font-semibold">{detail.data.attachment.name}</p>

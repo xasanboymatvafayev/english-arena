@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CalendarClock, Coins, Flame, Trophy } from "lucide-react";
 import type { Assignment, Book, Invitation, RewardRequest } from "@/lib/types";
 import { Badge } from "@/components/ui/Badge";
+import { absoluteApiUrl } from "@/lib/api";
 import { cn, formatDate, formatNumber, relativeTime } from "@/lib/utils";
 
 export function CoinAmount({
@@ -117,7 +118,7 @@ export function BookCover({
     >
       {book.cover_url ? (
         <img
-          src={book.cover_url}
+          src={absoluteApiUrl(book.cover_url)}
           alt={book.title}
           className="h-full w-full object-cover"
           loading="lazy"

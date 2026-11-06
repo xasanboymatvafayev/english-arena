@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookOpen, BookPlus, Download, Eye, EyeOff, FileText, ImagePlus, Pencil, Plus, Search, Trash2 } from "lucide-react";
-import { api } from "@/lib/api";
+import { absoluteApiUrl, api } from "@/lib/api";
 import type { Book } from "@/lib/types";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -154,7 +154,7 @@ export default function TeacherLibraryPage() {
             <div className="relative">
               <BookCover book={book} />
               <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-1 rounded-xl bg-black/55 p-1.5 opacity-0 backdrop-blur transition group-hover:opacity-100">
-                <a href={book.file_url} target="_blank" rel="noopener noreferrer" className="grid h-8 w-8 place-items-center rounded-lg text-white hover:bg-white/15" title="Faylni ochish"><Download size={14} /></a>
+                <a href={absoluteApiUrl(book.file_url)} target="_blank" rel="noopener noreferrer" className="grid h-8 w-8 place-items-center rounded-lg text-white hover:bg-white/15" title="Faylni ochish"><Download size={14} /></a>
                 <button onClick={() => openEdit(book)} className="grid h-8 w-8 place-items-center rounded-lg text-white hover:bg-white/15" title="Tahrirlash"><Pencil size={14} /></button>
                 <button onClick={() => togglePublish.mutate(book)} className="grid h-8 w-8 place-items-center rounded-lg text-white hover:bg-white/15" title={book.is_published ? "Yashirish" : "Ko'rsatish"}>
                   {book.is_published ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -200,7 +200,7 @@ export default function TeacherLibraryPage() {
               {cover ? (
                 <img src={URL.createObjectURL(cover)} alt="" className="h-full w-full object-cover" />
               ) : editing?.cover_url ? (
-                <img src={editing.cover_url} alt="" className="h-full w-full object-cover" />
+                <img src={absoluteApiUrl(editing.cover_url)} alt="" className="h-full w-full object-cover" />
               ) : (
                 <><ImagePlus size={22} /><span className="mt-2 px-2 text-[10px]">Rasm yuklash</span></>
               )}

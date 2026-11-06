@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Coins, Gift, History, ShoppingBag, Sparkles, Wallet, XCircle } from "lucide-react";
-import { api } from "@/lib/api";
+import { absoluteApiUrl, api } from "@/lib/api";
 import type { Reward, RewardRequest } from "@/lib/types";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
@@ -80,7 +80,7 @@ export default function StudentRewardsPage() {
               <Card key={reward.id} className={cn("group overflow-hidden card-hover", !reward.is_available && "opacity-70")}>
                 <div className="relative h-44 overflow-hidden bg-app-soft">
                   {reward.image_url ? (
-                    <img src={reward.image_url} alt={reward.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                    <img src={absoluteApiUrl(reward.image_url)} alt={reward.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                   ) : (
                     <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand/20 to-teal-500/10 text-brand"><Gift size={36} /></div>
                   )}
@@ -132,7 +132,7 @@ export default function StudentRewardsPage() {
                 <div key={item.id} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center">
                   <div className="flex min-w-0 flex-1 items-center gap-3">
                     {item.reward?.image_url ? (
-                      <img src={item.reward.image_url} alt="" className="h-11 w-11 rounded-xl object-cover" />
+                      <img src={absoluteApiUrl(item.reward.image_url)} alt="" className="h-11 w-11 rounded-xl object-cover" />
                     ) : <span className="grid h-11 w-11 place-items-center rounded-xl bg-app-soft text-muted"><Gift size={18} /></span>}
                     <div className="min-w-0">
                       <p className="truncate text-[13px] font-semibold">{item.reward?.title}</p>
@@ -166,7 +166,7 @@ export default function StudentRewardsPage() {
         {selected && (
           <div className="space-y-4">
             <div className="overflow-hidden rounded-2xl border border-line">
-              {selected.image_url ? <img src={selected.image_url} alt="" className="h-40 w-full object-cover" /> : <div className="flex h-40 items-center justify-center bg-app-soft text-brand"><Gift size={34} /></div>}
+              {selected.image_url ? <img src={absoluteApiUrl(selected.image_url)} alt="" className="h-40 w-full object-cover" /> : <div className="flex h-40 items-center justify-center bg-app-soft text-brand"><Gift size={34} /></div>}
               <div className="p-4">
                 <p className="text-sm font-bold">{selected.title}</p>
                 <p className="mt-1 text-[11px] leading-relaxed text-muted">{selected.description}</p>

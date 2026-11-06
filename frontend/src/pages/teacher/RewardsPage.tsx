@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, CheckCircle2, Coins, Gift, ImagePlus, Pencil, Plus, Trash2, X, XCircle } from "lucide-react";
-import { api } from "@/lib/api";
+import { absoluteApiUrl, api } from "@/lib/api";
 import type { Reward, RewardRequest } from "@/lib/types";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -189,7 +189,7 @@ export default function TeacherRewardsPage() {
               <Card key={reward.id} className="group overflow-hidden card-hover">
                 <div className="relative h-40 overflow-hidden bg-app-soft">
                   {reward.image_url ? (
-                    <img src={reward.image_url} alt={reward.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                    <img src={absoluteApiUrl(reward.image_url)} alt={reward.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                   ) : (
                     <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand/20 to-teal-500/10 text-brand"><Gift size={34} /></div>
                   )}
@@ -229,7 +229,7 @@ export default function TeacherRewardsPage() {
               <div key={request.id} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                   {request.reward?.image_url ? (
-                    <img src={request.reward.image_url} alt="" className="h-11 w-11 rounded-xl object-cover" />
+                    <img src={absoluteApiUrl(request.reward.image_url)} alt="" className="h-11 w-11 rounded-xl object-cover" />
                   ) : (
                     <span className="grid h-11 w-11 place-items-center rounded-xl bg-app-soft text-muted"><Gift size={18} /></span>
                   )}
@@ -279,7 +279,7 @@ export default function TeacherRewardsPage() {
           <Field label="Sovg'a rasmi" hint="JPG, PNG yoki WEBP · maksimal 4 MB">
             <label className="relative flex h-44 cursor-pointer items-center justify-center overflow-hidden rounded-2xl border border-dashed border-line bg-app-soft/50 transition hover:border-brand/40">
               {(preview || editing?.image_url) ? (
-                <img src={preview || editing?.image_url || ""} alt="" className="h-full w-full object-cover" />
+                <img src={preview || (editing?.image_url ? absoluteApiUrl(editing.image_url) : "")} alt="" className="h-full w-full object-cover" />
               ) : (
                 <div className="text-center text-muted"><ImagePlus size={26} className="mx-auto" /><p className="mt-2 text-[11px]">Rasm yuklash</p></div>
               )}

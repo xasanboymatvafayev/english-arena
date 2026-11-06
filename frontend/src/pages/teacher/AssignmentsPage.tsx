@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarClock, Check, ClipboardList, FileText, Paperclip, Plus, Search, Trash2, Users } from "lucide-react";
-import { api } from "@/lib/api";
+import { absoluteApiUrl, api } from "@/lib/api";
 import type { Assignment, Group, User } from "@/lib/types";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -169,7 +169,7 @@ export default function TeacherAssignmentsPage() {
 
             <div className="mt-4 flex flex-wrap items-center gap-2">
               {assignment.attachment && (
-                <a href={assignment.attachment.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-app-soft px-2.5 py-1.5 text-[10px] font-semibold text-muted hover:text-ink">
+                <a href={absoluteApiUrl(assignment.attachment.url)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-app-soft px-2.5 py-1.5 text-[10px] font-semibold text-muted hover:text-ink">
                   <Paperclip size={11} /> {assignment.attachment.name} · {fileSize(assignment.attachment.size)}
                 </a>
               )}
@@ -277,7 +277,7 @@ export default function TeacherAssignmentsPage() {
               <DueBadge assignment={detailQuery.data} />
               <Badge variant="brand">{detailQuery.data.group_name || "Tanlangan o'quvchilar"}</Badge>
               {detailQuery.data.attachment && (
-                <a href={detailQuery.data.attachment.url} target="_blank" rel="noopener noreferrer">
+                <a href={absoluteApiUrl(detailQuery.data.attachment.url)} target="_blank" rel="noopener noreferrer">
                   <Badge variant="outline"><Paperclip size={11} /> {detailQuery.data.attachment.name}</Badge>
                 </a>
               )}

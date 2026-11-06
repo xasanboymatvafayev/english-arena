@@ -436,7 +436,7 @@ export default function ReaderPage() {
 
                   <div>
                     <p className="mb-2 text-[11px] font-semibold">Kitob fayli</p>
-                    <a href={book.file_url} target="_blank" rel="noopener noreferrer">
+                    <a href={absoluteApiUrl(book.file_url)} target="_blank" rel="noopener noreferrer">
                       <Button variant="secondary" size="sm" className="w-full"><Download size={14} /> Yuklab olish ({book.file_type.toUpperCase()})</Button>
                     </a>
                   </div>
