@@ -12,7 +12,7 @@ from app.services.timeutils import period_bounds
 def _base_query(teacher_id: uuid.UUID, start: datetime | None, end: datetime | None, group_id=None):
     join_conditions = [
         CoinTransaction.student_id == User.id,
-        CoinTransaction.type == "award",
+        CoinTransaction.type.in_(["award", "deduction"]),
     ]
     if start is not None:
         join_conditions.append(CoinTransaction.created_at >= start)

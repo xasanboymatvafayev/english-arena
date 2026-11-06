@@ -46,7 +46,7 @@ def dashboard(teacher: User = Depends(require_teacher), db: Session = Depends(ge
         db.execute(
             select(func.coalesce(func.sum(CoinTransaction.amount), 0))
             .join(User, User.id == CoinTransaction.student_id)
-            .where(User.teacher_id == teacher.id, CoinTransaction.type == "award")
+            .where(User.teacher_id == teacher.id, CoinTransaction.type.in_(["award", "deduction"]))
         ).scalar()
         or 0
     )
